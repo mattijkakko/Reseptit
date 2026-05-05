@@ -11,6 +11,7 @@
 <header class="topbar">
   <div class="container topbar-inner">
     <span class="logo">Reseptikirja</span>
+    <button id="btn-logout" class="btn-logout" style="margin-left:auto">Kirjaudu ulos</button>
   </div>
 </header>
 
@@ -26,20 +27,7 @@
   <div class="form-card">
     <h3>Analysoi kuvakaappaus</h3>
 
-    <div class="api-key-section">
-      <button class="api-key-toggle" id="api-key-toggle">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-        Anthropic API-avain
-      </button>
-      <div class="api-key-form" id="api-key-form">
-        <div class="field" style="margin-top:8px">
-          <input type="password" id="api-key-input" placeholder="sk-ant-…" autocomplete="off">
-        </div>
-        <p style="font-size:12px;color:var(--muted);margin-top:4px">Avain tallennetaan selaimen paikalliseen tallennustilaan.</p>
-      </div>
-    </div>
-
-    <div class="upload-area" id="upload-area">
+<div class="upload-area" id="upload-area">
       <input type="file" id="file-input" accept="image/*">
       <div id="upload-hint">
         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -112,6 +100,7 @@
 <div id="toast" class="toast"></div>
 
 <script src="js/db.js"></script>
+<script src="js/auth.js"></script>
 <script src="js/lisaa.js"></script>
 </body>
 </html>

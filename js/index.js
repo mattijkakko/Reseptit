@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await requireAuth();
   const searchEl = document.getElementById('search');
   const gridEl   = document.getElementById('recipe-grid');
   const countEl  = document.getElementById('recipe-count');

@@ -1,21 +1,14 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await requireAuth();
+
   const editId = new URLSearchParams(location.search).get('id');
   let imageBase64 = null;
 
-  // ── API key ──────────────────────────────────────────────────────────
-  const apiKeyToggle = document.getElementById('api-key-toggle');
-  const apiKeyForm   = document.getElementById('api-key-form');
-  const apiKeyInput  = document.getElementById('api-key-input');
-  apiKeyInput.value  = getApiKey();
-
-  apiKeyToggle.addEventListener('click', () => apiKeyForm.classList.toggle('open'));
-  apiKeyInput.addEventListener('change', () => setApiKey(apiKeyInput.value.trim()));
-
   // ── Image upload ─────────────────────────────────────────────────────
-  const uploadArea    = document.getElementById('upload-area');
-  const fileInput     = document.getElementById('file-input');
-  const previewImg    = document.getElementById('upload-preview');
-  const analyzeBtn    = document.getElementById('btn-analyze');
+  const uploadArea = document.getElementById('upload-area');
+  const fileInput  = document.getElementById('file-input');
+  const previewImg = document.getElementById('upload-preview');
+  const analyzeBtn = document.getElementById('btn-analyze');
 
   uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
   uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
@@ -45,25 +38,19 @@ document.addEventListener('DOMContentLoaded', () => {
   analyzeBtn.addEventListener('click', analyzeImage);
 
   async function analyzeImage() {
-    const key = getApiKey();
-    if (!key) { toast('Anna ensin Anthropic API-avain ylhäällä.'); apiKeyForm.classList.add('open'); return; }
     if (!imageBase64) { toast('Valitse ensin kuva.'); return; }
 
     analyzeBtn.disabled = true;
     analyzeBtn.innerHTML = '<span class="spinner"></span> Analysoidaan…';
 
     try {
-      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      const resp = await fetch(getWorkerUrl() + '/analyze', {
         method: 'POST',
         headers: {
-          'content-type': 'application/json',
-          'x-api-key': key,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
+          'Content-Type': 'application/json',
+          'X-Auth-Password': getPassword(),
         },
         body: JSON.stringify({
-          model: 'claude-haiku-4-5-20251001',
-          max_tokens: 2048,
           messages: [{
             role: 'user',
             content: [
@@ -73,6 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
           }]
         })
       });
+
+      if (resp.status === 401) {
+        clearAuth();
+        toast('Istunto vanhentunut. Kirjaudutaan ulos…');
+        setTimeout(() => location.reload(), 1500);
+        return;
+      }
 
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));

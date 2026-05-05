@@ -1,4 +1,6 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await requireAuth();
+
   const id = new URLSearchParams(location.search).get('id');
   if (!id) return (location.href = 'index.html');
 
