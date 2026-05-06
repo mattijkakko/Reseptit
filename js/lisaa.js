@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const editId = new URLSearchParams(location.search).get('id');
   let imageBase64 = null;
+  let tags = [];
 
   // ── Image upload ─────────────────────────────────────────────────────
   const uploadArea = document.getElementById('upload-area');
@@ -21,6 +22,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   fileInput.addEventListener('change', () => {
     if (fileInput.files[0]) loadFile(fileInput.files[0]);
   });
+
+  function autoGrow(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
 
   function loadFile(file) {
     const reader = new FileReader();
@@ -127,7 +133,9 @@ Tärkeää:
     stepsEl.innerHTML = '';
     for (const step of (r.instructions || [])) addStep(step);
 
-    document.getElementById('notes').value = r.notes || '';
+    const notesEl = document.getElementById('notes');
+    notesEl.value = r.notes || '';
+    setTimeout(() => autoGrow(notesEl), 0);
     setTags(r.tags || []);
   }
 
@@ -200,6 +208,9 @@ Tärkeää:
       renumberSteps();
     });
     stepsEl.appendChild(row);
+    const ta = row.querySelector('textarea');
+    ta.addEventListener('input', () => autoGrow(ta));
+    if (text) setTimeout(() => autoGrow(ta), 0);
   }
 
   function renumberSteps() {
@@ -210,8 +221,6 @@ Tärkeää:
   }
 
   // ── Tags ──────────────────────────────────────────────────────────────
-  let tags = [];
-
   function setTags(list) {
     tags = [...list];
     renderTags();
@@ -247,6 +256,9 @@ Tärkeää:
     }
   });
   document.getElementById('tags-wrap').addEventListener('click', () => document.getElementById('tags-input').focus());
+
+  const notesTA = document.getElementById('notes');
+  notesTA.addEventListener('input', () => autoGrow(notesTA));
 
   // ── Save ──────────────────────────────────────────────────────────────
   document.getElementById('btn-save').addEventListener('click', saveRecipe);

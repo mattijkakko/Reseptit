@@ -307,7 +307,7 @@ a { color: inherit; text-decoration: none; }
 }
 .field input:focus,
 .field textarea:focus { border-color: var(--accent); }
-.field textarea { resize: vertical; min-height: 80px; }
+.field textarea { resize: none; overflow: hidden; min-height: 44px; }
 
 .row { display: flex; gap: 12px; }
 .row .field { flex: 1; }
@@ -359,6 +359,7 @@ a { color: inherit; text-decoration: none; }
 }
 .ing-section-header input {
   flex: 1;
+  min-width: 0;
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 6px 10px;
@@ -371,12 +372,13 @@ a { color: inherit; text-decoration: none; }
 
 .ing-row {
   display: grid;
-  grid-template-columns: 80px 70px 1fr auto;
+  grid-template-columns: 80px 70px minmax(0, 1fr) auto;
   gap: 6px;
   align-items: center;
   margin-bottom: 6px;
 }
 .ing-row input {
+  min-width: 0;
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 7px 9px;
@@ -434,8 +436,9 @@ a { color: inherit; text-decoration: none; }
   padding: 8px 10px;
   font: inherit;
   font-size: 14px;
-  resize: vertical;
-  min-height: 60px;
+  resize: none;
+  overflow: hidden;
+  min-height: 44px;
   outline: none;
 }
 .step-row textarea:focus { border-color: var(--accent); }
